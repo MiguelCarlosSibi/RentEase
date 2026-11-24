@@ -16,7 +16,9 @@ export default function Login() {
     ? 'Account created. You can now log in.'
     : location.state?.loggedOut
       ? 'You have been logged out.'
-      : '';
+      : location.state?.passwordReset
+        ? 'Your password has been reset. Log in with your new password.'
+        : '';
 
   const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
@@ -55,6 +57,10 @@ export default function Login() {
         <label htmlFor="password">Password</label>
         <input id="password" name="password" type="password" autoComplete="current-password" value={form.password} onChange={handleChange} />
         {errors.password && <span className="field-error">{errors.password}</span>}
+
+        <div className="link-row">
+          <Link to="/forgot-password">Forgot password?</Link>
+        </div>
 
         <button type="submit" className="btn btn-primary" disabled={submitting}>
           {submitting ? 'Logging in...' : 'Log in'}

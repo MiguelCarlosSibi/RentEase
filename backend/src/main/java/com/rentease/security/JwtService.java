@@ -37,6 +37,7 @@ public class JwtService {
                 .id(UUID.randomUUID().toString())
                 .subject(user.getEmail())
                 .claim("role", user.getRole().name())
+                .claim("ver", user.getTokenVersion())
                 .issuedAt(now)
                 .expiration(expiry)
                 .signWith(key)

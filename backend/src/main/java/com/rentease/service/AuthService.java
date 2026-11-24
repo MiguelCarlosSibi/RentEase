@@ -11,6 +11,7 @@ import com.rentease.exception.ApiException;
 import com.rentease.repository.RevokedTokenRepository;
 import com.rentease.repository.UserRepository;
 import com.rentease.security.JwtService;
+import com.rentease.util.PhoneNumbers;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import org.springframework.http.HttpStatus;
@@ -63,7 +64,7 @@ public class AuthService {
         User user = new User();
         user.setFullName(request.fullName().trim());
         user.setEmail(email);
-        user.setMobileNumber(normalizeMobile(request.mobileNumber().trim()));
+        user.setMobileNumber(PhoneNumbers.normalize(request.mobileNumber()));
         user.setPasswordHash(passwordEncoder.encode(request.password()));
         user.setRole(request.role());
         user.setStatus(UserStatus.ACTIVE);
@@ -122,13 +123,5 @@ public class AuthService {
 
     private ApiException invalidCredentials() {
         return new ApiException(HttpStatus.UNAUTHORIZED, "Invalid email or password");
-    }
-
-    /** Stores Philippine numbers in one format: 09XXXXXXXXX. */
-    private String normalizeMobile(String mobile) {
-        if (mobile.startsWith("+63")) {
-            return "0" + mobile.substring(3);
-        }
-        return mobile;
     }
 }

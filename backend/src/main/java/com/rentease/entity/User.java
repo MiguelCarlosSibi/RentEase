@@ -54,6 +54,10 @@ public class User {
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
+    /** Raised on every password change or reset so tokens issued before the change stop working. */
+    @Column(name = "token_version", nullable = false, columnDefinition = "INT NOT NULL DEFAULT 0")
+    private int tokenVersion = 0;
+
     @PrePersist
     void onCreate() {
         if (createdAt == null) {
@@ -72,6 +76,10 @@ public class User {
             lockedUntil = now.plusMinutes(lockMinutes);
             failedAttempts = 0;
         }
+    }
+
+    public void incrementTokenVersion() {
+        tokenVersion++;
     }
 
     public void resetFailedAttempts() {
@@ -95,4 +103,5 @@ public class User {
     public int getFailedAttempts() { return failedAttempts; }
     public LocalDateTime getLockedUntil() { return lockedUntil; }
     public LocalDateTime getCreatedAt() { return createdAt; }
+    public int getTokenVersion() { return tokenVersion; }
 }

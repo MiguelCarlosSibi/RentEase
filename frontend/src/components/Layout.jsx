@@ -6,6 +6,7 @@ const MENUS = {
   OWNER: [
     { label: 'Dashboard', to: '/owner/dashboard' },
     { label: 'Profile', to: '/profile' },
+    { label: 'Change Password', to: '/change-password' },
     { label: 'Properties and Rooms', soon: true },
     { label: 'Tenants and Leases', soon: true },
     { label: 'Bills and Payments', soon: true },
@@ -14,6 +15,7 @@ const MENUS = {
   TENANT: [
     { label: 'Dashboard', to: '/tenant/dashboard' },
     { label: 'Profile', to: '/profile' },
+    { label: 'Change Password', to: '/change-password' },
     { label: 'My Bills', soon: true },
     { label: 'Payments and Receipts', soon: true },
   ],

@@ -51,9 +51,18 @@ export function AuthProvider({ children }) {
     setUser(null);
   }, []);
 
+  // Used after a profile update: keeps the signed-in user's details current.
+  const updateUser = useCallback((updated) => setUser(updated), []);
+
+  // Used after a password change: the server issues a new token and the old one stops working.
+  const replaceSession = useCallback((token, updated) => {
+    setToken(token);
+    setUser(updated);
+  }, []);
+
   const value = useMemo(
-    () => ({ user, loading, login, register, logout }),
-    [user, loading, login, register, logout]
+    () => ({ user, loading, login, register, logout, updateUser, replaceSession }),
+    [user, loading, login, register, logout, updateUser, replaceSession]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

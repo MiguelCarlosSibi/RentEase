@@ -14,3 +14,6 @@ frontend/dist/
 .vscode/
 *.iml
 .DS_Store
+
+# Local mail settings (contain a password)
+backend/src/main/resources/application-local.properties

@@ -1,0 +1,6 @@
+# Copy this file to application-local.properties (it is git-ignored) and run the backend with the "local" profile.
+# Example for Gmail: turn on 2-Step Verification, then create an App Password and use it below.
+spring.mail.host=smtp.gmail.com
+spring.mail.port=587
+spring.mail.username=your.address@gmail.com
+spring.mail.password=your-16-character-app-password

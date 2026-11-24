@@ -14,6 +14,7 @@ CREATE TABLE IF NOT EXISTS user_account (
     status          ENUM('ACTIVE','INACTIVE')  NOT NULL DEFAULT 'ACTIVE',
     failed_attempts INT           NOT NULL DEFAULT 0,
     locked_until    DATETIME      NULL,
+    token_version   INT           NOT NULL DEFAULT 0,
     created_at      DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (user_id),
     UNIQUE KEY uk_user_account_email (email),
@@ -25,4 +26,17 @@ CREATE TABLE IF NOT EXISTS revoked_token (
     token_id   VARCHAR(64) NOT NULL,
     expires_at DATETIME    NOT NULL,
     PRIMARY KEY (token_id)
+) ENGINE=InnoDB;
+
+-- Increment 2: single-use, expiring password reset links (only the SHA-256 hash of the token is stored).
+CREATE TABLE IF NOT EXISTS password_reset_token (
+    token_id   BIGINT      NOT NULL AUTO_INCREMENT,
+    user_id    BIGINT      NOT NULL,
+    token_hash VARCHAR(64) NOT NULL,
+    created_at DATETIME    NOT NULL,
+    expires_at DATETIME    NOT NULL,
+    used_at    DATETIME    NULL,
+    PRIMARY KEY (token_id),
+    UNIQUE KEY uk_password_reset_token_hash (token_hash),
+    CONSTRAINT fk_password_reset_user FOREIGN KEY (user_id) REFERENCES user_account (user_id)
 ) ENGINE=InnoDB;

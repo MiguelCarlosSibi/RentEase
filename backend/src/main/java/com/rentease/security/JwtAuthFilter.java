@@ -42,9 +42,11 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             String token = header.substring(7);
             try {
                 Claims claims = jwtService.parse(token);
+                final Integer tokenVersion = claims.get("ver", Integer.class);
                 if (!revokedTokens.existsById(claims.getId())) {
                     users.findByEmail(claims.getSubject())
                             .filter(u -> u.getStatus() == UserStatus.ACTIVE)
+                            .filter(u -> tokenVersion != null && tokenVersion == u.getTokenVersion())
                             .ifPresent(u -> {
                                 UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
                                         u, null, List.of(new SimpleGrantedAuthority("ROLE_" + u.getRole().name())));
