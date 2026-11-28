@@ -58,6 +58,10 @@ public class User {
     @Column(name = "token_version", nullable = false, columnDefinition = "INT NOT NULL DEFAULT 0")
     private int tokenVersion = 0;
 
+    /** True for accounts created by an owner: the tenant must replace the temporary password at first login. */
+    @Column(name = "must_change_password", nullable = false, columnDefinition = "BOOLEAN NOT NULL DEFAULT FALSE")
+    private boolean mustChangePassword = false;
+
     @PrePersist
     void onCreate() {
         if (createdAt == null) {
@@ -104,4 +108,6 @@ public class User {
     public LocalDateTime getLockedUntil() { return lockedUntil; }
     public LocalDateTime getCreatedAt() { return createdAt; }
     public int getTokenVersion() { return tokenVersion; }
+    public boolean isMustChangePassword() { return mustChangePassword; }
+    public void setMustChangePassword(boolean mustChangePassword) { this.mustChangePassword = mustChangePassword; }
 }

@@ -1,12 +1,14 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { api } from '../api.js';
-import { useAuth } from '../context/AuthContext.jsx';
+import { dashboardPath, useAuth } from '../context/AuthContext.jsx';
 import { PASSWORD_PATTERN, PASSWORD_RULE } from '../validators.js';
 
 const EMPTY = { currentPassword: '', newPassword: '', confirmNewPassword: '' };
 
 export default function ChangePassword() {
-  const { replaceSession } = useAuth();
+  const { user, replaceSession } = useAuth();
+  const navigate = useNavigate();
   const [form, setForm] = useState(EMPTY);
   const [errors, setErrors] = useState({});
   const [message, setMessage] = useState('');
@@ -34,7 +36,12 @@ export default function ChangePassword() {
     setSubmitting(true);
     try {
       const data = await api('/auth/change-password', { method: 'POST', body: form });
+      const wasTemporary = user.mustChangePassword;
       replaceSession(data.token, data.user); // the old token no longer works
+      if (wasTemporary) {
+        navigate(dashboardPath(data.user.role), { replace: true });
+        return;
+      }
       setForm(EMPTY);
       setErrors({});
       setSuccess('Your password has been changed. Use the new password the next time you log in.');
@@ -49,6 +56,11 @@ export default function ChangePassword() {
   return (
     <section>
       <h1>Change Password</h1>
+      {user.mustChangePassword && (
+        <p className="alert alert-error" role="alert">
+          You are using a temporary password. Choose a new password to continue.
+        </p>
+      )}
       <div className="card">
         <form className="form-grid" onSubmit={handleSubmit} noValidate>
           {success && <p className="alert alert-success" role="status">{success}</p>}

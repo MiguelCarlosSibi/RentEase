@@ -11,7 +11,8 @@ public record UserResponse(
         String email,
         String mobileNumber,
         Role role,
-        LocalDateTime createdAt) {
+        LocalDateTime createdAt,
+        boolean mustChangePassword) {
 
     public static UserResponse from(User user) {
         return new UserResponse(
@@ -20,6 +21,7 @@ public record UserResponse(
                 user.getEmail(),
                 user.getMobileNumber(),
                 user.getRole(),
-                user.getCreatedAt());
+                user.getCreatedAt(),
+                user.isMustChangePassword());
     }
 }

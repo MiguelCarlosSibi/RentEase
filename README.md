@@ -8,10 +8,33 @@ built across the frontend, backend, and database.
 |-------|------------|
 | Frontend | ReactJS 18 (Vite), React Router |
 | Backend | Spring Boot 3.3 (Java 17), Spring Security, Spring Data JPA |
-| Database | MySQL / MariaDB (XAMPP) |
+| Database | Supabase (PostgreSQL). Tables are created automatically by Hibernate (`ddl-auto=update`) |
 | Security | BCrypt password hashing, signed JWT access tokens, server-side token revocation on logout |
 
-## Features in this increment
+## Increment 3, part 1: rooms, tenants, and leases (SRS Feature 2)
+
+Owner screens: **Rooms**, **Tenants**, **Leases** (side menu). Everything an owner sees is limited to their own data.
+
+| SRS ID | What it does |
+|--------|--------------|
+| FR010, FR011 | Add a room (unique number per owner, description, capacity, monthly rate); list and edit rooms; status Available, Full, or Under maintenance follows the leases |
+| FR012 | Archive a room that has no active lease |
+| FR013 | Add a tenant: creates the login account with a temporary password and sends it by SMS (Semaphore) |
+| FR006 | A tenant must replace the temporary password at first login (enforced by the browser and by the server) |
+| FR014, FR015 | View, search, and edit tenants; deactivate or reactivate a tenant account (records are kept) |
+| FR016, FR017 | Create a lease (room, tenant, dates, rent, due day 1 to 28, deposit); rejected when the room is full |
+| FR018, FR019 | Edit the rent and due day of an active lease; end a lease (frees the place in the room) |
+| FR020 | Owner dashboard lists leases ending within 30 days |
+| FR055, FR056 | Philippine numbers are converted for Semaphore and every SMS is logged in `sms_log` (passwords are never stored in the log) |
+
+Endpoints (OWNER only): `GET/POST /api/owner/rooms`, `PUT /api/owner/rooms/{id}`, `POST /api/owner/rooms/{id}/archive`,
+`GET/POST /api/owner/tenants`, `PUT /api/owner/tenants/{id}`, `POST /api/owner/tenants/{id}/deactivate|activate`,
+`GET/POST /api/owner/leases`, `PUT /api/owner/leases/{id}`, `POST /api/owner/leases/{id}/end`.
+
+SMS settings (environment variables, never committed): `SEMAPHORE_API_KEY`, optional `SEMAPHORE_SENDER_NAME`.
+Without an API key the backend runs in DEV MODE: no SMS is sent, the attempt is logged as FAILED, and the owner sees the temporary password once on screen.
+
+## Features in Increments 1 and 2
 
 1. **User account creation**
    - Registration form with required-field validation (browser and server).

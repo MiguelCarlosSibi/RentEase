@@ -79,6 +79,7 @@ public class PasswordService {
         }
 
         user.setPasswordHash(passwordEncoder.encode(request.newPassword()));
+        user.setMustChangePassword(false); // a temporary password has now been replaced (FR006)
         user.incrementTokenVersion();
         users.save(user);
         resetTokens.deleteByUser(user); // any pending reset link is no longer needed
@@ -140,6 +141,7 @@ public class PasswordService {
         User user = users.findById(userId)
                 .orElseThrow(PasswordService::invalidLink);
         user.setPasswordHash(passwordEncoder.encode(request.newPassword()));
+        user.setMustChangePassword(false);
         user.incrementTokenVersion();   // ends every existing session
         user.resetFailedAttempts();     // also clears a login lock
         users.save(user);

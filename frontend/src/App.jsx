@@ -5,13 +5,16 @@ import Layout from './components/Layout.jsx';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
 import ChangePassword from './pages/ChangePassword.jsx';
 import ForgotPassword from './pages/ForgotPassword.jsx';
+import Leases from './pages/Leases.jsx';
 import Login from './pages/Login.jsx';
 import NotFound from './pages/NotFound.jsx';
 import OwnerDashboard from './pages/OwnerDashboard.jsx';
 import Profile from './pages/Profile.jsx';
 import Register from './pages/Register.jsx';
+import Rooms from './pages/Rooms.jsx';
 import ResetPassword from './pages/ResetPassword.jsx';
 import TenantDashboard from './pages/TenantDashboard.jsx';
+import Tenants from './pages/Tenants.jsx';
 import Unauthorized from './pages/Unauthorized.jsx';
 
 function Home() {
@@ -34,6 +37,9 @@ export default function App() {
           path="/owner/dashboard"
           element={<ProtectedRoute roles={['OWNER']}><OwnerDashboard /></ProtectedRoute>}
         />
+        <Route path="/owner/rooms" element={<ProtectedRoute roles={['OWNER']}><Rooms /></ProtectedRoute>} />
+        <Route path="/owner/tenants" element={<ProtectedRoute roles={['OWNER']}><Tenants /></ProtectedRoute>} />
+        <Route path="/owner/leases" element={<ProtectedRoute roles={['OWNER']}><Leases /></ProtectedRoute>} />
         <Route
           path="/tenant/dashboard"
           element={<ProtectedRoute roles={['TENANT']}><TenantDashboard /></ProtectedRoute>}

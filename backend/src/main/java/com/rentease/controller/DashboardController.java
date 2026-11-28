@@ -2,9 +2,8 @@ package com.rentease.controller;
 
 import com.rentease.dto.OwnerDashboardResponse;
 import com.rentease.dto.TenantDashboardResponse;
-import com.rentease.entity.Role;
 import com.rentease.entity.User;
-import com.rentease.repository.UserRepository;
+import com.rentease.service.DashboardService;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -13,26 +12,19 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class DashboardController {
 
-    private final UserRepository users;
+    private final DashboardService dashboard;
 
-    public DashboardController(UserRepository users) {
-        this.users = users;
+    public DashboardController(DashboardService dashboard) {
+        this.dashboard = dashboard;
     }
 
     @GetMapping("/api/owner/dashboard")
     public OwnerDashboardResponse ownerDashboard(@AuthenticationPrincipal User user) {
-        return new OwnerDashboardResponse(
-                user.getFullName(),
-                user.getEmail(),
-                users.countByRole(Role.TENANT));
+        return dashboard.owner(user);
     }
 
     @GetMapping("/api/tenant/dashboard")
     public TenantDashboardResponse tenantDashboard(@AuthenticationPrincipal User user) {
-        return new TenantDashboardResponse(
-                user.getFullName(),
-                user.getEmail(),
-                user.getMobileNumber(),
-                user.getCreatedAt());
+        return dashboard.tenant(user);
     }
 }

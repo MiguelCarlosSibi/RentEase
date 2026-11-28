@@ -12,6 +12,10 @@ export default function ProtectedRoute({ roles, children }) {
   if (!user) {
     return <Navigate to="/login" replace state={{ from: location }} />;
   }
+  // A tenant added by an owner must replace the temporary password before using anything else (FR006).
+  if (user.mustChangePassword && location.pathname !== '/change-password') {
+    return <Navigate to="/change-password" replace />;
+  }
   if (roles && !roles.includes(user.role)) {
     return <Navigate to="/unauthorized" replace />;
   }

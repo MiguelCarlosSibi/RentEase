@@ -13,4 +13,13 @@ public final class PhoneNumbers {
         }
         return value;
     }
+
+    /** Converts 09XXXXXXXXX to 639XXXXXXXXX, the format used when sending through Semaphore (FR055). */
+    public static String toInternational(String mobile) {
+        String value = normalize(mobile);
+        if (value.startsWith("09")) {
+            return "63" + value.substring(1);
+        }
+        return value;
+    }
 }
